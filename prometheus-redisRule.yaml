@@ -1,0 +1,59 @@
+
+apiVersion: monitoring.coreos.com/v1
+kind: PrometheusRule
+metadata:
+  labels:
+    prometheus: k8s
+    role: alert-rules
+  name: redis-rules
+  namespace: monitoring
+spec:
+  groups:
+  - name: RedisStatsAlert
+    rules:
+    - alert: redis 
+      expr: redis_up{job="redis-exporter"} == 0
+      for: 1m
+      annotations:
+        description: "{{ $labels.instance }}  job:{{ $labels.job }} redis！"
+        summary: "redis "
+    - alert: last create rdb failed                      
+      expr: redis_rdb_last_bgsave_status != 1
+      for: 1m
+      labels:
+        severity: warning
+      annotations:
+        summary: " Instance {{ $labels.instance }} rdb_last_bgsave_status  "
+        description: "last create rdb failed"
+    - alert: Redis linked too many clients
+      expr: redis_connected_clients / redis_config_maxclients * 100 > 80
+      for: 1m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Instance {{ $labels.instance }} Redis linked clients too many"
+        description: "Redis linked clients too many. This requires immediate action!"
+    - alert: master link status failed                                    
+      expr: redis_master_link_up == 0
+      for: 1m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Instance {{ $labels.instance }} link failed"
+        description: "redis_master_link=0 link failed"
+    - alert: last AOF failed
+      expr: redis_aof_last_bgrewrite_status != 1
+      for: 1m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Instance {{ $labels.instance }} redis aof last rewrite duration sec"
+        description: "last AOF failed"
+    - alert: Redis Cluster State Wrong
+      expr: redis_cluster_state != 1
+      for: 1m
+      labels:
+        severity: warning
+      annotations:
+        summary: "Instance {{ $labels.instance }} redis cluster status wrong"
+        description: "Redis Cluster State Wrong"
