@@ -1,0 +1,4 @@
+...
+- job_name: 'redis'
+  static_configs:
+  - targets: ['redis.default.svc.cluster.local:9121']
