@@ -8,3 +8,5 @@ $ kubectl delete secret additional-configs -n monitoring
 $ kubectl create secret generic additional-configs --from-file=prometheus-additional.yaml -n monitoring
 
 kubectl get svc -n monitoring
+
+$ curl -X POST "http://10.101.207.170:9090/-/reload"
