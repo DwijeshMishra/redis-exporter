@@ -10,3 +10,7 @@ $ kubectl create secret generic additional-configs --from-file=prometheus-additi
 kubectl get svc -n monitoring
 
 $ curl -X POST "http://10.101.207.170:9090/-/reload"
+
+
+---------------------------------------------------------------------------------------------------------
+curl  https://github.com/helm/charts/blob/master/stable/redis/values-production.yaml
